@@ -1,0 +1,4 @@
+#!/bin/bash
+
+dm_type="fermion"
+g++ ${dm_type}_xsec.cxx -I$(root-config --incdir) --std=c++17 -I ../GenExLight/TDecayTFoam $(root-config --libs) -lFoam -lEG ../GenExLight/TDecayTFoam/TDecay.o -o ${dm_type}_xsec.exe

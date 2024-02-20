@@ -1,0 +1,12 @@
+Run 1000
+pi0_decay 0.05 0.03 0 0.001 0.1 NCE_nucleon 2e+20 1 200 3.17669e+12 3.75414e+12
+eta_decay 0.05 0.03 0 0.001 0.1 NCE_nucleon 2e+20 1 200 5.77446e+11 3.75414e+12
+Total 0.05 0.03 0 0.001 0.1 NCE_nucleon 2e+20 1 200 
+Run 1000
+pi0_decay 0.05 0.03 0 0.001 0.1 NCE_nucleon 2e+20 1 1000 3.17669e+12 3.75414e+12
+eta_decay 0.05 0.03 0 0.001 0.1 NCE_nucleon 2e+20 1 1000 5.77446e+11 3.75414e+12
+Total 0.05 0.03 0 0.001 0.1 NCE_nucleon 2e+20 1 1000 
+Run 1000
+pi0_decay 0.05 0.03 0 0.001 0.1 NCE_nucleon 2e+20 1 1000 3.17669e+12 3.75414e+12
+eta_decay 0.05 0.03 0 0.001 0.1 NCE_nucleon 2e+20 1 1000 5.77446e+11 3.75414e+12
+Total 0.05 0.03 0 0.001 0.1 NCE_nucleon 2e+20 1 1000 

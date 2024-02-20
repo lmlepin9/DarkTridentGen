@@ -1,0 +1,109 @@
+#Parameter Card
+#All masses should be provided in GeV, all lengths in meters.
+#Lines preceded by a # are ignored by the parser.
+
+#Uncomment this to set the seed for the Random Number Generator
+#seed 114234
+
+#Give your run a name. If no name is supplied, one will be generated from the current time.
+#run 14506
+
+#Model Parameters
+epsilon 1e-3
+dark_matter_mass 0.012
+dark_photon_mass 0.02
+alpha_D 0.1
+decay_type scalar
+
+#Run parameters
+POT 2e20
+pi0_per_POT 3.05
+samplesize 1000
+
+
+#The simulation generates dark matter trajectories intersecting the detector, scatters them, and 
+#throws away the results until burn_max is reached. If the number of attempts exceeds 
+#burn_max*burn_timeout, the burn_in process aborts early and an alert is written to cerr
+#before the simulation resumes.
+#burn_max 1000
+#burn_timeout 20000 
+
+beam_energy 120
+
+################################
+#Production Channel Definitions#
+################################
+
+#Production Parameters
+#Currently pi0_decay,  eta_decay, V_decay and phi_decay, are supported. 
+#For baryonic, we support pi0_decay_baryonic, eta_decay_baryonic, V_decay_baryonic, phi_decay_baryonic, piminus_capture
+
+production_channel pi0_decay
+production_distribution particle_list
+particle_list_file ../mesons/pi0s.dat
+particle_list_position true
+particle_list_weight true
+
+############################
+#END OF PRODUCTION CHANNELS#
+############################
+
+
+
+################
+#SIGNAL CHANNEL#
+################
+
+#Scattering Parameters
+#Choose from NCE_nucleon, NCE_electron, Pion_Inelastic, Inelastic_Delta_to_Gamma or NCE_nucleon_baryonic.
+signal_channel NCE_electron
+#scatter_dist_filename Source/data/DIS.dat
+
+#Add this line to use coherent scattering rather than incoherent scattering.
+#coherent true
+
+
+########
+#OUPTUT#
+########
+
+#Where to write events. 
+output_file Events/events.dat
+#Where to write a summary of the run with number of events and paramaters in the format: channel_name V_mass DM_mass num_events epsilon alpha_prime scattering_channel 
+summary_file Events/summary.dat
+
+#In comprehensive mode, all particles that make up an event are written to the output file. This overwrites the output file.
+output_mode comprehensive
+#summary suppresses output to output_file (no event list), while still writing to the summary file.
+#output_mode summary
+
+#Generate a particle_list file of length samplesize by writing to output_file for use in production_distribution particle_list.
+#output_mode particle_list
+
+######################
+#DETECTOR DECLARATION#
+######################
+
+#Detector Parameters
+detector cuboid
+x-position 54.18152116, 
+y-position 72.89818027,
+z-position 677.96485681
+length 10.368
+width 2.5635
+height 2.33
+det-phi 3.08324
+det-theta 0.400058
+det-psi 3.14147
+
+
+#Material parameters
+#Mass is set in GeV.
+#mass is only important for coherent scattering, can be set to anything.
+#anything not defined will be set to zero.
+material Argon
+number_density 2.1e22
+proton_number 18
+neutron_number 22
+electron_number 18
+mass 40.0

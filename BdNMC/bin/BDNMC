@@ -1,0 +1,36 @@
+#!/bin/bash
+set -e
+
+RUN_DIRECTORY=$PWD
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+cd $DIR
+cd ..
+
+START=$(date +%s)
+if [ ! -d "Events" ]
+then
+	mkdir Events
+fi
+
+cd build
+
+#if [ ! -e "main" ]
+#then
+make main
+#fi
+cd ..
+
+if (($# != 0))
+then
+    for arg in "$@"
+    do
+        ./build/main $RUN_DIRECTORY/$arg
+    done
+else
+    ./build/main
+fi
+
+#END=$(date +%s)
+#DIFF=$(( $END - $START ))
+#echo "Execution time = $DIFF s"
