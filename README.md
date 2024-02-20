@@ -7,13 +7,13 @@ Pawel Guzowski, Anyssa Navrer-Agasson and Luis Mora
 
 ## Dependencies:
 
-This package relies on two existing tools and we do not claim authorship 
-of any of the following of neither BdNMC or GenExLight. 
+This package relies on two existing tools. We do not claim authorship 
+of BdNMC or GenExLight. 
 
-BdNMC: Simulates the decay of neutral mesons into DM particles
+[BdNMC](https://github.com/pgdeniverville/BdNMC): Simulates the decay of neutral mesons into DM particles
 by using NuMI flux files.
 
-GenExLight: Simulates the scattering of DM particles intersecting
+[GenExLight](https://github.com/rkycia/GenExLight): Simulates the scattering of DM particles intersecting
 the detector volume. 
 
 
