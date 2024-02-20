@@ -9,8 +9,6 @@ Pawel Guzowski, Anyssa Navrer-Agasson, Luis Mora
 
 This package relies on two existing tools.
 
-[g4NuMI neutral meson flux](https://cernbox.cern.ch/s/U4uy7tRbj4gYYmo)
-
 BdNMC: Simulates the decay of neutral mesons into DM particles
 by using NuMI flux files.
 
