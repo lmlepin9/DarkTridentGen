@@ -47,3 +47,4 @@
 # Meson directory
 
 neutral_meson_flux/ 
+output_files/

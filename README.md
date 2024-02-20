@@ -2,12 +2,13 @@
 
 ## Authors:
 
-Pawel Guzowski, Anyssa Navrer-Agasson, Luis Mora
+Pawel Guzowski, Anyssa Navrer-Agasson and Luis Mora
 
 
 ## Dependencies:
 
-This package relies on two existing tools.
+This package relies on two existing tools and we do not claim authorship 
+of any of the following of neither BdNMC or GenExLight. 
 
 BdNMC: Simulates the decay of neutral mesons into DM particles
 by using NuMI flux files.
@@ -18,12 +19,17 @@ the detector volume.
 
 ## How to run:
 
-Obtain the [g4NuMI neutral meson flux](https://cernbox.cern.ch/s/U4uy7tRbj4gYYmo) files 
-and locate them in a new directory in the top directory
+Setup the generator environment variables and download flux files:
 
-mkdir -p neutral_mesons 
+source setup.sh
 
-Compile and run BdNMC using a template parameter file:
+Compile and run BdNMC using a parameter file
+
+./BdNMC/bin/BdNMC parameter_fermion_test_pi0.dat
+
+Output files will stored in a specific directory created by setup.sh 
+
+
 
 
 
