@@ -31,12 +31,12 @@ declare -a mass_points_eta=(0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.10 0.
 
 for mA in "${mass_points_pi0[@]}"
   do
-    python ./grid/jobsub_dark_tridents.py --run_number 400 --nevts 12000 --n_jobs 5 --mA $mA --ratio $m_ratio --decay_channel pi0_decay --signal_channel 06-10-2023 --template ./templates/template_parameter_uboone_root_pi0.dat --dm_type $dm_type
+    python jobsub_dark_tridents.py --run_number 400 --nevts 12000 --n_jobs 5 --mA $mA --ratio $m_ratio --decay_channel pi0_decay --signal_channel 06-10-2023 --template ../templates/template_parameter_uboone_root_pi0.dat --dm_type $dm_type
   done
 
 
 
 for mA in "${mass_points_eta[@]}"
   do
-    python ./grid/jobsub_dark_tridents.py --run_number 400 --nevts 2500 --n_jobs 5 --mA $mA --ratio $m_ratio --decay_channel eta_decay --signal_channel 06-10-2023 --template ./templates/template_parameter_uboone_root_eta.dat --dm_type $dm_type
+    python jobsub_dark_tridents.py --run_number 400 --nevts 2500 --n_jobs 5 --mA $mA --ratio $m_ratio --decay_channel eta_decay --signal_channel 06-10-2023 --template ../templates/template_parameter_uboone_root_eta.dat --dm_type $dm_type
   done 
