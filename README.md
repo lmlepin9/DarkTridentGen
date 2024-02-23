@@ -29,13 +29,14 @@ the detector volume. Custom features that we included in this version:
 
 Setup the generator environment variables and download flux files:
 
-source setup.sh
+`source setup.sh`
 
-Compile and run BdNMC using a parameter file
+Compile and run BdNMC using a parameter file. The path to the meson flux directory
+and to the output directory have to be declared before running BdNMC. 
 
-./BdNMC/bin/BdNMC parameter_fermion_test_pi0.dat
+`./BdNMC/bin/BdNMC parameter_fermion_test_pi0.dat`
 
-Output files will stored in a specific directory created by setup.sh 
+
 
 
 
