@@ -34,11 +34,11 @@ Setup the generator environment variables and download flux files:
 Compile and run BdNMC using a parameter file. The path to the meson flux directory
 and to the output directory have to be declared before running BdNMC. 
 
-`DarkTridentsGen$ ./BdNMC/bin/BDNMC BdNMC/parameter_fermion_test_pi0.dat`
+`./BdNMC/bin/BDNMC BdNMC/parameter_fermion_test_pi0.dat` (from within folder DarkTridentGen/)
 
 ## This Branch
 * Has dynamic paths
-* To Do - electron dark matter scattering amplitudesy
+* To Do - electron dark matter scattering
 
 
 
