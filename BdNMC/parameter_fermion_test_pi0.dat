@@ -36,7 +36,7 @@ beam_energy 120
 #Production Parameters
 production_channel pi0_decay
 production_distribution particle_list
-particle_list_file /uboone/app/users/lmoralep/DarkTridentGen/neutral_meson_flux/pi0s.dat
+particle_list_file ../neutral_meson_flux/pi0s.dat
 particle_list_position true
 particle_list_weight true
 
@@ -66,7 +66,7 @@ signal_channel NCE_nucleon
 #Where to write events. 
 # output_file ./events_0.05_all_1k_alD_0.1_fermion_test_id.dat
 # Where to write a summary of the run with number of events and paramaters in the format: channel_name V_mass DM_mass num_events epsilon alpha_prime scattering_channel 
-summary_file /uboone/app/users/lmoralep/DarkTridentGen/output_files/bdnmc_summary_test.dat 
+summary_file ../output_files/bdnmc_summary_test.dat 
 
 #In comprehensive mode, all particles that make up an event are written to the output file. This overwrites the output file.
 # output_mode comprehensive
@@ -75,7 +75,7 @@ summary_file /uboone/app/users/lmoralep/DarkTridentGen/output_files/bdnmc_summar
 # output_mode summary
 
 # ROOT output 
-root_file /uboone/app/users/lmoralep/DarkTridentGen/output_files/bdnmc_pi0_test.root 
+root_file ../output_files/bdnmc_pi0_test.root
 output_mode dm_dist_root
 
 
