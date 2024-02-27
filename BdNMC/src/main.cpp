@@ -185,6 +185,7 @@ int main(int argc, char* argv[]){
   TTree *outtree = make_event_tree();
   TTree* pot_tree = make_pot_tree();
   TTree* model_tree = make_model_tree();
+  TTree* etree = make_etree();
 
   TFile *outfile = 0;
   
@@ -853,7 +854,7 @@ int main(int argc, char* argv[]){
               the comprehensive output stream 
             */
             if(outmode == "root_output" || outmode == "dm_dist_root"){
-              record_root(outtree, vec, nevent, isOther, DMGen_list[i]->Channel_Name(), det);
+              record_root(outtree, etree, vec, nevent, isOther, DMGen_list[i]->Channel_Name(), det);
               isOther = true;
               scatter_switch=true;
               //continue;
@@ -963,6 +964,7 @@ int main(int argc, char* argv[]){
     pot_tree->Write();
     model_tree->Write();
     outtree->Write();
+    etree->Write();
     outfile->Close();
 
   }

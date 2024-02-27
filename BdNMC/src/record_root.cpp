@@ -79,20 +79,25 @@ TTree* make_event_tree(){
     outtree->Branch("channel_name", &dm_mom);
 
 
-    // ELECTRON VARIABLES
-    outtree->Branch("electron_id", &electron_id);
-    outtree->Branch("electron_energy", &electron_energy);
-    outtree->Branch("electron_px", &electron_px);
-    outtree->Branch("electron_py", &electron_py);
-    outtree->Branch("electron_pz", &electron_pz);
-    outtree->Branch("electron_origin_x", &electron_origin_x);
-    outtree->Branch("electron_origin_y", &electron_origin_y);
-    outtree->Branch("electron_origin_z", &electron_origin_z);
-    outtree->Branch("electron_origin_t0", &electron_origin_t0);
-    outtree->Branch("electron_vx", &electron_vx);
-
     return outtree;
 
+}
+
+TTree* make_etree(){
+    TTree* etree = new TTree("elecron_tree", "Tree containing electrons");
+    // ELECTRON VARIABLES
+    etree->Branch("electron_id", &electron_id);
+    etree->Branch("electron_energy", &electron_energy);
+    etree->Branch("electron_px", &electron_px);
+    etree->Branch("electron_py", &electron_py);
+    etree->Branch("electron_pz", &electron_pz);
+    etree->Branch("electron_origin_x", &electron_origin_x);
+    etree->Branch("electron_origin_y", &electron_origin_y);
+    etree->Branch("electron_origin_z", &electron_origin_z);
+    etree->Branch("electron_origin_t0", &electron_origin_t0);
+    etree->Branch("electron_vx", &electron_vx);
+
+    return etree;
 }
 
 TTree* make_pot_tree(){
@@ -121,7 +126,7 @@ TTree* make_model_tree(){
 }
 
 
-void record_root(TTree *outtree, list<Particle> &partlist, int nevent, bool isOther, std::string channel_name, std::shared_ptr<detector> det){
+void record_root(TTree *outtree, TTree* etree, list<Particle> &partlist, int nevent, bool isOther, std::string channel_name, std::shared_ptr<detector> det){
 
     bool dm_found = false;
     event_number = nevent;
@@ -204,7 +209,7 @@ void record_root(TTree *outtree, list<Particle> &partlist, int nevent, bool isOt
             //electron_vx = it->end_coords[0];
             //electron_vy = it->end_coords[1];
             //electron_vz = it->end_coords[2];
-            outtree->Fill();
+            etree->Fill();
 
         }
 
