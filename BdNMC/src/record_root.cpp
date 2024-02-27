@@ -23,6 +23,10 @@ double branching_ratio, ntrials, tot_pot;
 double alphaD, dm_mass, dp_mass, epsilon;
 
 
+// double electron variables
+int electron_id;
+double electron_energy, electron_px, electron_py, electron_pz, electron_origin_x, electron_origin_y, electron_origin_z, electron_origin_t0, electron_vx, electron_vy, electron_vz;
+
 TTree* make_event_tree(){
 
     TTree* outtree = new TTree("event_tree", "Tree containing paticles and their parameters");
@@ -74,6 +78,19 @@ TTree* make_event_tree(){
 
     outtree->Branch("channel_name", &dm_mom);
 
+
+    // ELECTRON VARIABLES
+    outtree->Branch("electron_id", &electron_id);
+    outtree->Branch("electron_energy", &electron_energy);
+    outtree->Branch("electron_px", &electron_px);
+    outtree->Branch("electron_py", &electron_py);
+    outtree->Branch("electron_pz", &electron_pz);
+    outtree->Branch("electron_origin_x", &electron_origin_x);
+    outtree->Branch("electron_origin_y", &electron_origin_y);
+    outtree->Branch("electron_origin_z", &electron_origin_z);
+    outtree->Branch("electron_origin_t0", &electron_origin_t0);
+    outtree->Branch("electron_vx", &electron_vx);
+
     return outtree;
 
 }
@@ -109,7 +126,6 @@ void record_root(TTree *outtree, list<Particle> &partlist, int nevent, bool isOt
     bool dm_found = false;
     event_number = nevent;
     for(list<Particle>::iterator it = partlist.begin(); it != partlist.end(); it++){
-
         /* Filling with parent meson info */
         if(it->name == "pion" || it->name == "eta"){
             meson_energy = it->E; 
@@ -173,6 +189,22 @@ void record_root(TTree *outtree, list<Particle> &partlist, int nevent, bool isOt
             }
 
              outtree->Fill();
+
+        }  else if(it->name == "electron"){
+            //cout<<"Electron found"<<endl;
+            electron_id = it->origin_id;
+            electron_energy = it->E;
+            electron_px = it->px;
+            electron_py = it->py;
+            electron_pz = it->pz;
+            electron_origin_x = it->origin_coords[0];
+            electron_origin_y = it->origin_coords[1];
+            electron_origin_z = it->origin_coords[2];
+            electron_origin_t0 = it->origin_coords[3];
+            //electron_vx = it->end_coords[0];
+            //electron_vy = it->end_coords[1];
+            //electron_vz = it->end_coords[2];
+            outtree->Fill();
 
         }
 

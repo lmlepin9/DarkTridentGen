@@ -830,24 +830,7 @@ int main(int argc, char* argv[]){
               isOther = true;
               continue;
             }
-
-
-
-            /*
-              LM: 
-              This if is only used if you want to store the DM particles
-              crossing the detector in a root file rather than in
-              the comprehensive output stream 
-            */
-            if(outmode == "root_output" || outmode == "dm_dist_root"){
-              record_root(outtree, vec, nevent, isOther, DMGen_list[i]->Channel_Name(), det);
-              isOther = true;
-              scatter_switch=true;
-              continue;
-            }
-
-
-
+            
             // This happens regardless of the output mode...
             // Here we provide a DM particle and the starting particle vector
             // It increases the number of scatters 
@@ -861,6 +844,24 @@ int main(int argc, char* argv[]){
               }
               scatter_switch = true;	
             }
+
+
+            /*
+              LM: 
+              This if is only used if you want to store the DM particles
+              crossing the detector in a root file rather than in
+              the comprehensive output stream 
+            */
+            if(outmode == "root_output" || outmode == "dm_dist_root"){
+              record_root(outtree, vec, nevent, isOther, DMGen_list[i]->Channel_Name(), det);
+              isOther = true;
+              scatter_switch=true;
+              //continue;
+            }
+
+
+
+            
             
 
             else{
