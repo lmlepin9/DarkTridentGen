@@ -18,7 +18,7 @@ decay_type scalar
 
 #Run parameters
 POT 1e21
-samplesize 100
+samplesize 1000
 pi0_per_POT 3.05
 
 #The simulation generates dark matter trajectories intersecting the detector, scatters them, and 
@@ -52,7 +52,7 @@ particle_list_weight true
 
 #Scattering Parameters
 #Choose from NCE_nucleon, NCE_electron, Pion_Inelastic, Inelastic_Delta_to_Gamma or NCE_nucleon_baryonic.
-signal_channel NCE_nucleon
+signal_channel NCE_electron
 #scatter_dist_filename Source/data/DIS.dat
 
 #Add this line to use coherent scattering rather than incoherent scattering.
@@ -64,7 +64,7 @@ signal_channel NCE_nucleon
 ########
 
 #Where to write events. 
-# output_file ./events_0.05_all_1k_alD_0.1_fermion_test_id.dat
+output_file ./events_0.05_all_1k_alD_0.1_fermion_test_id.dat
 # Where to write a summary of the run with number of events and paramaters in the format: channel_name V_mass DM_mass num_events epsilon alpha_prime scattering_channel 
 summary_file ../output_files/bdnmc_summary_test.dat 
 
