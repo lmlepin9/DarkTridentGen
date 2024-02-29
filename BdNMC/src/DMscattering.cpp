@@ -48,22 +48,29 @@ double EeTMin (double EDM, double MDM) {
 double F1 (double Ee, double EDM, double MDM, double MDP) {
 	double rF1;
 	double F1N, F1D;
-	F1N = 2.0*Me*EDM*EDM-(2.0*Me*EDM+MDM*MDM)*(Ee-Me);
+	F1N = 2.0*Me*EDM*EDM-(2.0*Me*EDM+MDM*MDM)*(Ee-Me); // 2 x Me x Echi^2 - (2 x Me x )
 	F1D = (EDM*EDM-MDM*MDM)*pow(MDP*MDP+2*Me*Ee-2*Me*Me,2);
 	rF1 = F1N/F1D;
 	return(rF1);
 }
 //  differential DM - electron scattering cross section dsigma/dEe
-double dsigmadEe (double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD) {
+double dsigmadEe (double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD, bool isScalar) {
 	double rdsig;
 	double coef;
-	coef = 4*Pi*kappa*kappa*alphaEM*alphaD;
-	rdsig = coef*F1(Ee,EDM,MDM,MDP);
+
+	if (isScalar) {
+		coef = 4*Pi*kappa*kappa*alphaEM*alphaD;
+		rdsig = coef*F1(Ee,EDM,MDM,MDP);
+	} else {
+		coef = 0;
+		rdsig = 0;
+	}
+	
 	return(rdsig);
 }
 
-double dsigmadEe_scaled (double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD) {
-    return dsigmadEe (Ee, EDM, MDM, MDP, kappa, alphaD)*convGeV2cm2*convmcm;
+double dsigmadEe_scaled (double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD, bool isScalar) {
+    return dsigmadEe (Ee, EDM, MDM, MDP, kappa, alphaD, isScalar)*convGeV2cm2*convmcm;
 }
 
 // Function F2(Ee) 

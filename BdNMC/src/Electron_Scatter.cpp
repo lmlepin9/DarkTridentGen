@@ -76,14 +76,15 @@ double Electron_Scatter::scatmin(double DME, double DMM){
 }
 
 void Electron_Scatter::scatterevent (Particle &DM, Particle &electron) {
+	bool isScaler {true};
 	double EeMin = scatmin(DM.E,DM.m);
     double EeMax = scatmax(DM.E,DM.m);
-	double dsigmax = dsigmadEe(EeMin,DM.E,DM.m,MDP,kap,alD);
+	double dsigmax = dsigmadEe(EeMin,DM.E,DM.m,MDP,kap,alD,isScaler);
     double xe, thetae, phie, pe;
 
     while(true){
         xe = Random::Flat(0,1)*(EeMax-EeMin)+EeMin;
-        if(dsigmadEe(xe,DM.E,DM.m,MDP,kap,alD)>dsigmax*Random::Flat(0,1)){
+        if(dsigmadEe(xe,DM.E,DM.m,MDP,kap,alD,isScaler)>dsigmax*Random::Flat(0,1)){
 		electron.Set_Mass(Me);
 		electron.name = "electron";
             	thetae = ThetaEe(xe,DM.E,DM.m);
