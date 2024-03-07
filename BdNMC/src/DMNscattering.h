@@ -7,12 +7,12 @@
 double dsigmadEdmP(double E, double Edm, double mdm, double mV, double alphaprime, double kappa);
 double dsigmadEdmP_coherent(double E, double Edm, double mdm, double mV, double alphaprime, double kappa, double A, double Z);
 double dsigmadEdmN(double E, double Edm, double mdm, double mV, double alphaprime, double kappa);
-
-//Kinematic limits
+double fermion_matrix_element(double Ee, double EDM, double MDM, double MDP);
+// Kinematic limits
 double Efmin(double E, double mdm, double m);
 double Ef_to_N_Theta(double E, double Ef, double mdm, double m);
 
-//Form factors
+// Form factors
 double CoherentFormFactor(double q, double A);
 
 double RadiusFunction(double);

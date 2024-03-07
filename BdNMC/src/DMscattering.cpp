@@ -72,18 +72,21 @@ double fermion_matrix_element(double Ee, double EDM, double MDM, double MDP)
 }
 
 //  differential DM - electron scattering cross section dsigma/dEe
-double dsigmadEe(double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD)
+double dsigmadEe(double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD, bool isScalar)
 {
 	double rdsig;
 	double coef;
 	coef = 4 * Pi * kappa * kappa * alphaEM * alphaD;
-	rdsig = coef * F1(Ee, EDM, MDM, MDP);
+	if (isScalar)
+		rdsig = coef * F1(Ee, EDM, MDM, MDP);
+	else
+		rdsig = coef * fermion_matrix_element(Ee, EDM, MDM, MDP);
 	return (rdsig);
 }
 
-double dsigmadEe_scaled(double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD)
+double dsigmadEe_scaled(double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD, double isScalar)
 {
-	return dsigmadEe(Ee, EDM, MDM, MDP, kappa, alphaD) * convGeV2cm2 * convmcm;
+	return dsigmadEe(Ee, EDM, MDM, MDP, kappa, alphaD, isScalar) * convGeV2cm2 * convmcm;
 }
 
 // Function F2(Ee)
