@@ -5,6 +5,7 @@
 #include "Random.h"
 #include "Kinematics.h"
 #include "constants.h"
+#include <fstream>
 
 using std::cout;
 using std::endl;
@@ -62,7 +63,7 @@ double F1(double Ee, double EDM, double MDM, double MDP)
 
 double fermion_matrix_element(double Ee, double EDM, double MDM, double MDP)
 {
-	double constant = 1; // to be determined
+	
 	double ratio;
 	double Nominator, Denominator;
 	Nominator = (EDM * EDM * Me + EDM * (EDM * Me + 2 * Me * (-Ee + Me)) + (Ee - Me) * ((Ee - 2 * Me) * Me - MDP * MDP));
@@ -72,8 +73,18 @@ double fermion_matrix_element(double Ee, double EDM, double MDM, double MDP)
 }
 
 //  differential DM - electron scattering cross section dsigma/dEe
-double dsigmadEe(double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD, bool isScalar)
+double dsigmadEe(double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD)
 {
+	//read in isScalar.txt and set the isScalar variable
+	bool isScalar;
+	std::string line;
+	std::ifstream isScalarFile;
+	isScalarFile.open("isScalar.txt");
+	
+	isScalarFile >> line;
+	isScalarFile.close();
+	
+	isScalar = (line == "true");
 	double rdsig;
 	double coef;
 	coef = 4 * Pi * kappa * kappa * alphaEM * alphaD;
@@ -84,9 +95,9 @@ double dsigmadEe(double Ee, double EDM, double MDM, double MDP, double kappa, do
 	return (rdsig);
 }
 
-double dsigmadEe_scaled(double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD, double isScalar)
+double dsigmadEe_scaled(double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD)
 {
-	return dsigmadEe(Ee, EDM, MDM, MDP, kappa, alphaD, isScalar) * convGeV2cm2 * convmcm;
+	return dsigmadEe(Ee, EDM, MDM, MDP, kappa, alphaD) * convGeV2cm2 * convmcm;
 }
 
 // Function F2(Ee)

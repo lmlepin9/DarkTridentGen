@@ -57,6 +57,7 @@ using std::vector;
 // Temporary! I will clean this up in the big revision
 const string dark_axion_signal_string = "Dark_Photon";
 
+
 // const double mp = MASS_PROTON;
 // const double mn = MASS_NEUTRON;
 // const double me = MASS_ELECTRON;
@@ -227,6 +228,13 @@ int main(int argc, char *argv[])
   double mv = par->MassDP();
   double mdm = par->MassDM();
   std::string decay_type = par->Decay_Type(); // Type of dark matter (scalar/fermion)
+  bool isScalar = (decay_type == "scalar");
+  //write isScalar into a text file
+  std::ofstream scalar_file;
+  scalar_file.open("isScalar.txt");
+  scalar_file << isScalar;
+  scalar_file.close();
+  
 
   cout << "Model parameters" << endl;
   cout << "alD " << alD << endl;

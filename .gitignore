@@ -87,3 +87,4 @@ BdNMC/build/.d/V_decay_gen.d
 .vscode/settings.json
 
 BdNMC/build/main
+BdNMC/isScalar.txt
