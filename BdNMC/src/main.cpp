@@ -9,6 +9,7 @@
 #include <numeric>
 #include <memory>
 #include <algorithm>
+#include <mutex>
 
 #include "constants.h"
 
@@ -39,6 +40,7 @@
 #include <TFile.h>
 #include <TTree.h>
 #include <TString.h>
+#include <thread>
 
 // Plotting stuff
 // #include "DMNscattering.h"
@@ -64,7 +66,6 @@ const string dark_axion_signal_string = "Dark_Photon";
 // const double EDMres = 0.1;
 // cm per meter
 // const double cmpm = 100.0;
-
 double t_delay_fraction(double tcut, double pos, double speed)
 {
   double tdelay = pos / speed / speed_of_light - pos / speed_of_light;
@@ -73,6 +74,130 @@ double t_delay_fraction(double tcut, double pos, double speed)
   else
     return 1 - (tcut - tdelay) / tcut;
 }
+std::mutex mutex;
+void threading(std::vector<std::vector<Particle>> &event_list, double &Vnumtot, int &chan_count, vector<long> &trials_list, vector<std::shared_ptr<Distribution>> &PartDist_list, vector<std::shared_ptr<DMGenerator>> &DMGen_list, function<double(Particle &)> &det_int, string &sig_part_name, vector<int> &NDM_list, int &nother,string &outmode, int &nevent, vector<double> &Vnum_list, std::unique_ptr<Scatter> &SigGen, std::shared_ptr<detector> &det, double &timing_cut, vector<int> &scat_list, vector<double> &timing_efficiency, int &samplesize){
+      thread_local std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count() ^ std::hash<std::thread::id>{}(std::this_thread::get_id()));
+      int i;
+      bool scatter_switch = false;
+      double vrnd = Random::Flat(0.0, 1) * Vnumtot;
+      // this is just a random choice between channles
+      for (i = 0; i < chan_count; i++)
+      {
+        // cout << i << " vrnd=" <<  vrnd << " vs Vnum_list " << Vnum_list[i] <<  endl;
+        if (vrnd <= Vnum_list[i])
+        {
+          break;
+        }
+        else
+        {
+          vrnd -= Vnum_list[i];
+        }
+      }
+      mutex.lock();
+      trials_list[i]++;
+      
+      list<Particle> vec;
+      Particle dist_part(0);
+      PartDist_list[i]->Sample_Particle(dist_part);
+      mutex.unlock();
+      
+        bool isOther = false;
+        if (DMGen_list[i]->GenDM(vec, det_int, dist_part))
+        {
+          // Yes, this list is named vec.
+
+          // We create a Particle iterator to go through the particles produced from the decay
+          for (list<Particle>::iterator iter = vec.begin(); iter != vec.end(); iter++)
+          {
+            // The way this is structured means I can't do my usual repeat thing to boost stats.
+            if (isOther)
+            {
+              mutex.lock();
+              nother += 1;
+              mutex.unlock();
+              continue;
+            }
+
+            // Check if the particle is DM
+            if (iter->name.compare(sig_part_name) == 0)
+            {
+              mutex.lock();
+              NDM_list[i]++;
+              mutex.unlock();
+              /*
+                LM:
+                This if is used to store in the comprehensive output
+                all the DM particles that cross the detector
+                I think this is also one of Pawel's additions
+              */
+              
+
+              // This happens regardless of the output mode...
+              // Here we provide a DM particle and the starting particle vector
+              // It increases the number of scatters
+              if (SigGen->probscatter(det, vec, iter))
+              {
+                mutex.lock();
+                scat_list[i]++;
+                
+                if (timing_cut > 0)
+                {
+                  timing_efficiency[i] += t_delay_fraction(timing_cut, sqrt(pow(iter->end_coords[0], 2) + pow(iter->end_coords[1], 2) + pow(iter->end_coords[2], 2)), iter->Speed());
+                }
+                else
+                {
+                  timing_efficiency[i] += 1;
+                }
+                scatter_switch = true;
+                mutex.unlock();
+              }
+
+              /*
+                LM:
+                This if is only used if you want to store the DM particles
+                crossing the detector in a root file rather than in
+                the comprehensive output stream
+              */
+
+              /*else{
+                iter = vec.erase(iter);
+                iter--;
+              }*/
+            }
+          }
+          if (outmode == "root_output" || outmode == "dm_dist_root")
+          {
+            // record_root(outtree, etree, vec, nevent, isOther, DMGen_list[i]->Channel_Name(), det);
+            std::vector<Particle> tempVec(vec.begin(), vec.end());
+            mutex.lock();
+            event_list.push_back(tempVec);
+            mutex.unlock();
+            isOther = true;
+            scatter_switch = true;
+            // continue;
+          }
+        }
+
+        
+
+        // If we are in dm_dist_root or dm_detector_distribution
+        // We increase nevent every time a particle intersects with the detector
+        else if (scatter_switch && outmode == "dm_dist_root")
+        {
+
+          ++nevent;
+          if (nevent % 100 == 0)
+            std::cout << "Event " << nevent << "/" << samplesize << std::endl;
+        }
+
+        else if (scatter_switch && outmode == "dm_detector_distribution")
+        {
+          ++nevent;
+          // if(nevent%100 == 0) std::cout << "Event " << nevent << "/" << samplesize << std::endl;
+        }
+      }
+
+
 
 int main(int argc, char *argv[])
 {
@@ -872,127 +997,33 @@ int main(int argc, char *argv[])
   }
   else
   {
-    for (; (nevent < samplesize) && ((trials < trials_max) || (trials_max <= 0)); trials++)
-    {
-      int i;
-      scatter_switch = false;
-      double vrnd = Random::Flat(0.0, 1) * Vnumtot;
-      for (i = 0; i < chan_count; i++)
-      {
-        // cout << i << " vrnd=" <<  vrnd << " vs Vnum_list " << Vnum_list[i] <<  endl;
-        if (vrnd <= Vnum_list[i])
-        {
-          break;
+    
+      
+    std::vector<std::vector<Particle>> event_list;
+    std::vector<std::thread> threads;
+    for (int i = 0; i < 3; ++i) {
+    threads.push_back(std::thread([&]() {
+        while (event_list.size() < samplesize) {
+          
+            threading(event_list,Vnumtot,chan_count,trials_list,PartDist_list,DMGen_list,det_int,sig_part_name,NDM_list,nother,outmode,nevent,Vnum_list,SigGen,det,timing_cut,scat_list,timing_efficiency,samplesize);
         }
-        else
-        {
-          vrnd -= Vnum_list[i];
-        }
-      }
-      trials_list[i]++;
-      list<Particle> vec;
-      Particle dist_part(0);
-      PartDist_list[i]->Sample_Particle(dist_part);
-      bool isOther = false;
-      if (DMGen_list[i]->GenDM(vec, det_int, dist_part))
-      {
-        // Yes, this list is named vec.
+    }));
+}
 
-        // We create a Particle iterator to go through the particles produced from the decay
-        for (list<Particle>::iterator iter = vec.begin(); iter != vec.end(); iter++)
-        {
-          // The way this is structured means I can't do my usual repeat thing to boost stats.
-          if (isOther)
-          {
-            nother += 1;
-            continue;
-          }
-
-          // Check if the particle is DM
-          if (iter->name.compare(sig_part_name) == 0)
-          {
-            NDM_list[i]++;
-
-            /*
-              LM:
-              This if is used to store in the comprehensive output
-              all the DM particles that cross the detector
-              I think this is also one of Pawel's additions
-            */
-            if (outmode == "dm_detector_distribution")
-            {
-              *comprehensive_out << DMGen_list[i]->Channel_Name() << " " << det->Ldet(*iter) << " ";
-              iter->report(*comprehensive_out);
-              scatter_switch = true;
-              isOther = true;
-              continue;
-            }
-
-            // This happens regardless of the output mode...
-            // Here we provide a DM particle and the starting particle vector
-            // It increases the number of scatters
-            if (SigGen->probscatter(det, vec, iter))
-            {
-              scat_list[i]++;
-              if (timing_cut > 0)
-              {
-                timing_efficiency[i] += t_delay_fraction(timing_cut, sqrt(pow(iter->end_coords[0], 2) + pow(iter->end_coords[1], 2) + pow(iter->end_coords[2], 2)), iter->Speed());
-              }
-              else
-              {
-                timing_efficiency[i] += 1;
-              }
-              scatter_switch = true;
-            }
-
-            /*
-              LM:
-              This if is only used if you want to store the DM particles
-              crossing the detector in a root file rather than in
-              the comprehensive output stream
-            */
-
-            /*else{
-              iter = vec.erase(iter);
-              iter--;
-            }*/
-          }
-        }
-        if (outmode == "root_output" || outmode == "dm_dist_root")
-        {
-          record_root(outtree, etree, vec, nevent, isOther, DMGen_list[i]->Channel_Name(), det);
-          isOther = true;
-          scatter_switch = true;
-          // continue;
-        }
-      }
-
-      // This output mode is used to ouput the particles in a text file
-      // it also increases nevent by one
-      if (scatter_switch && outmode == "comprehensive")
-      {
-        *comprehensive_out << "event " << ++nevent << endl;
-        Record_Particles(*comprehensive_out, vec);
-        *comprehensive_out << "endevent " << nevent << endl
-                           << endl;
-      }
-
-      // If we are in dm_dist_root or dm_detector_distribution
-      // We increase nevent every time a particle intersects with the detector
-      else if (scatter_switch && outmode == "dm_dist_root")
-      {
-
-        ++nevent;
-        if (nevent % 100 == 0)
-          std::cout << "Event " << nevent << "/" << samplesize << std::endl;
-      }
-
-      else if (scatter_switch && outmode == "dm_detector_distribution")
-      {
-        ++nevent;
-        // if(nevent%100 == 0) std::cout << "Event " << nevent << "/" << samplesize << std::endl;
-      }
+    // Wait for all threads to finish
+    for (auto& thread : threads) {
+        thread.join();
     }
+    int iterator = 0;
+    for (const auto& event : event_list) {
+      std::list<Particle> list(event.begin(), event.end());
+      record_root(outtree, etree, list, iterator, false, DMGen_list[0]->Channel_Name(), det);
+      iterator++;
+    }
+    
+
+
+    
   }
   cout << "Run complete\n";
 
@@ -1093,3 +1124,4 @@ int main(int argc, char *argv[])
   delete (par);
   return 0;
 }
+

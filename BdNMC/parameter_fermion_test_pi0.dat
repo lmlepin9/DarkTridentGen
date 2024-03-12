@@ -11,10 +11,10 @@ run 1000
 
 #Model Parameters
 epsilon 1e-3
-dark_matter_mass 0.03
+dark_matter_mass 0.0165
 dark_photon_mass 0.05
 alpha_D 0.1
-decay_type fermion
+decay_type scalar
 
 #Run parameters
 POT 1e21
