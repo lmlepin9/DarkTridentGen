@@ -40,6 +40,18 @@ and to the output directory have to be declared before running BdNMC.
 * Has dynamic paths
 * To Do - electron dark matter scattering
 
+## Running On Noether
+Noether now has CVM-FS, so we can use the ROOT versions from this.
+```
+$ qrsh    # jump to work node
+$ source /cvmfs/sft.cern.ch/lcg/app/releases/ROOT/6.12.06/x86_64-fedora26-gcc72-opt/root/bin/thisroot.sh
+$ cd DarkTridentGen   # Go to your DarkTridentGen folder
+$ echo $PATH | tr ":" "\n" # should see the following returned
+/cvmfs/sft.cern.ch/lcg/app/releases/ROOT/6.12.06/x86_64-fedora26-gcc72-opt/root/bin
+...
+$ ./BdNMC/bin/BDNMC BdNMC/parameter_fermion_test_pi0.dat
+```
+
 
 
 
