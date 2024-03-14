@@ -35,6 +35,9 @@
 #include "Axion_Dark_Photon.h"
 #include "SignalDecay.h"
 
+#include <filesystem>
+
+
 // ROOT includes
 #include <TFile.h>
 #include <TTree.h>
@@ -266,7 +269,11 @@ int main(int argc, char *argv[])
   double target_n = par->Target_N_Num();
   double target_p = par->Target_P_Num();
   double target_p_cross = par->P_Cross();
-
+  
+  
+  std::filesystem::path currentPath = std::filesystem::current_path();
+  std::cout << "Current path: " << currentPath << std::endl;
+    
   std::shared_ptr<list<production_channel>> prodlist = par->Get_Production_List();
   int chan_count = prodlist->size();
 
