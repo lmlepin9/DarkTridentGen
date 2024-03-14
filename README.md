@@ -38,7 +38,33 @@ and to the output directory have to be declared before running BdNMC.
 
 ## This Branch
 * Has dynamic paths
-* To Do - electron dark matter scattering
+* Has Fermionic dark matter - electron scattering
+
+## Running On Noether With CVM-FS
+Noether now has CVM-FS, so we can use the ROOT versions from this.
+```
+$ qrsh    # jump to work node
+$ source /cvmfs/sft.cern.ch/lcg/app/releases/ROOT/6.12.06/x86_64-fedora26-gcc72-opt/root/bin/thisroot.sh
+$ cd DarkTridentGen   # Go to your DarkTridentGen folder
+$ echo $PATH | tr ":" "\n" # should see the following returned
+/cvmfs/sft.cern.ch/lcg/app/releases/ROOT/6.12.06/x86_64-fedora26-gcc72-opt/root/bin
+...
+$ ./BdNMC/bin/BDNMC BdNMC/parameter_fermion_test_pi0.dat
+```
+
+## Running On Noether Without CVM-FS
+This requires a specific version of a precompiled binary of ROOT. We reccomend https://root.cern/releases/release-61206/ fedora27.
+```
+$ qrsh
+$ wget https://root.cern/download/root_v6.12.06.Linux-fedora27-x86_64-gcc7.2.tar.gz
+$ tar -xzvf root_v6.12.06.Linux-fedora27-x86_64-gcc7.2.tar.gz
+$ source root/bin/thisroot.sh
+$ echo $PATH | tr ":" "\n"
+/gluster/home/USER/....../root/bin
+$ cd DarkTridentsGen    # go to wherever your DarkTridentGen is cloned to
+$ ./BdNMC/bin/BDNMC BdNMC/parameter_fermion_test_pi0.dat
+```
+
 
 
 
