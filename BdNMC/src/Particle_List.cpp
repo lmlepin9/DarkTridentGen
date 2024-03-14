@@ -111,6 +111,7 @@ int Particle_List::parse_line(string& line){
 
 void Particle_List::sample_particle(Particle &part){
 	if(iter==partlist.end()){
+		//counter = 0;
 		iter = partlist.begin();
 	}
 	part.ThreeMomentum(iter->px,iter->py,iter->pz);
@@ -122,6 +123,7 @@ void Particle_List::sample_particle(Particle &part){
                 part.w = iter->w;
                 part.origin_id = iter->origin_id;
 	}
+	
 	iter++;
 }
 

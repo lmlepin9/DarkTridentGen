@@ -28,6 +28,7 @@ private:
 	//int batch_size;
 	std::list<_part> partlist;
 	std::list<_part>::iterator iter;
+	int counter = 0;
 	int parse_line(std::string &line);
 	int load_particle_batch();
 	int part_count;

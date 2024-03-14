@@ -135,9 +135,10 @@ void threading(std::vector<std::vector<Particle>> &event_list, double &Vnumtot, 
               // This happens regardless of the output mode...
               // Here we provide a DM particle and the starting particle vector
               // It increases the number of scatters
+              mutex.lock();
               if (SigGen->probscatter(det, vec, iter))
               {
-                mutex.lock();
+                
                 scat_list[i]++;
                 
                 if (timing_cut > 0)
@@ -149,8 +150,9 @@ void threading(std::vector<std::vector<Particle>> &event_list, double &Vnumtot, 
                   timing_efficiency[i] += 1;
                 }
                 scatter_switch = true;
-                mutex.unlock();
+                
               }
+              mutex.unlock();
 
               /*
                 LM:
@@ -1001,10 +1003,16 @@ int main(int argc, char *argv[])
       
     std::vector<std::vector<Particle>> event_list;
     std::vector<std::thread> threads;
-    for (int i = 0; i < 3; ++i) {
+   
+    int highest_print = 0;
+    for (int i = 0; i < 12; ++i) {
     threads.push_back(std::thread([&]() {
+      
         while (event_list.size() < samplesize) {
-          
+            if (event_list.size() % 1000 == 0 && event_list.size() > highest_print){
+                highest_print = event_list.size();
+                cout << "Event " << highest_print << " of " << samplesize << " generated\n";
+            }
             threading(event_list,Vnumtot,chan_count,trials_list,PartDist_list,DMGen_list,det_int,sig_part_name,NDM_list,nother,outmode,nevent,Vnum_list,SigGen,det,timing_cut,scat_list,timing_efficiency,samplesize);
         }
     }));
@@ -1097,10 +1105,7 @@ int main(int argc, char *argv[])
     etree->Write();
     outfile->Close();
   }
-
-  cout << "Number of nothers: " << nother << endl;
-  cout << "Number of trials = " << trials << endl;
-  cout << "Number of candidates intersecting detector = " << NDM << endl;
+cout << "we in\n";
   cout << "Number of " << sigchoice << " = " << scattot << endl;
   for (int i = 0; i < chan_count; i++)
     cout << "Number of scatterings from channel " << i + 1 << " " << DMGen_list[i]->Channel_Name() << " = " << scat_list[i] << " in " << trials_list[i] << " trials." << endl;

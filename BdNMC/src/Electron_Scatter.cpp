@@ -8,7 +8,7 @@
 #include <algorithm>
 #include "constants.h"
 #include <list>
-
+#include <unistd.h> 
 using std::cout;
 using std::endl;
 using std::list;
@@ -30,6 +30,8 @@ bool Electron_Scatter::probscatter(std::shared_ptr<detector> &det, Particle &DM)
 
 	double LXdet = det->Ldet(DM) * convmcm;
 	double prob = sigma2(DM.E, DM.m, MDP, kap, alD, scatmax(DM.E, DM.m), scatmin(DM.E, DM.m)) * (det->ENtot()) * LXdet * convGeV2cm2 * DM.w;
+	
+	
 	if (prob > Random::Flat(0, 1) * pMax)
 	{
 		if (prob > pMax)
@@ -42,10 +44,14 @@ bool Electron_Scatter::probscatter(std::shared_ptr<detector> &det, Particle &DM)
 bool Electron_Scatter::probscatter(std::shared_ptr<detector> &det, Particle &DM, Particle &electron)
 {
 	double prob;
-
 	double LXdet = det->Ldet(DM) * convmcm;
-	if ((prob = sigma2(DM.E, DM.m, MDP, kap, alD, scatmax(DM.E, DM.m), scatmin(DM.E, DM.m)) * (det->ENtot()) * LXdet * convGeV2cm2 * DM.w) > Random::Flat(0, 1) * pMax)
+	float rand = Random::Flat(0, 1);
+	prob = sigma2(DM.E, DM.m, MDP, kap, alD, scatmax(DM.E, DM.m), scatmin(DM.E, DM.m)) * (det->ENtot()) * LXdet * convGeV2cm2 * DM.w;
+	
+	
+	if (prob > rand * pMax)
 	{
+
 		if (prob > pMax)
 			pMax = prob;
 		scatterevent(DM, electron);

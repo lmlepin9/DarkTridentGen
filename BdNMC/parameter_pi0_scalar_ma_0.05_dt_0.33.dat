@@ -11,7 +11,7 @@ run 1000
 
 #Model Parameters
 epsilon 1e-3
-dark_matter_mass 0.0165
+dark_matter_mass 0.016666666666666666
 dark_photon_mass 0.05
 alpha_D 0.1
 decay_type scalar
@@ -34,17 +34,12 @@ beam_energy 120
 ################################
 
 #Production Parameters
-production_channel eta_decay
-production_distribution particle_list
-particle_list_file ../neutral_meson_flux/etas.dat
-particle_list_position true
-particle_list_weight true
-
 production_channel pi0_decay
 production_distribution particle_list
 particle_list_file ../neutral_meson_flux/pi0s.dat
 particle_list_position true
 particle_list_weight true
+
 ############################
 #END OF PRODUCTION CHANNELS#
 ############################

@@ -31,6 +31,7 @@ detector_sphere::detector_sphere (double x, double y, double z, double radius){
 
 // distance DM travels through detector
 double detector_sphere::Ldet (Particle &DM) {
+    
 	double Ldetenter, Ldetexit;
     double A, B, C;	
 //cout << DM.name << " " << DM.E << " " << DM.px << " " << DM.py << " " << DM.pz << " " << DM.m << " " << DM.origin_coords[0] << " " << DM.origin_coords[1] << " " << DM.origin_coords[2] << " " << DM.origin_coords[3] << " " << DM.end_coords[0] << " " << DM.end_coords[1] << " " << DM.end_coords[2] << " " << DM.end_coords[3] << std::endl;
@@ -67,7 +68,7 @@ double detector_sphere::Ldet (Particle &DM) {
 
 	if(Ldetexit<0)
 		Ldetexit=0;
-
+    
     if(Ldetexit>Ldetenter){
         //deprecate this as soon as possible
         //cross_point[0] = Ldetenter;
@@ -239,8 +240,13 @@ detector_cuboid::detector_cuboid(double x, double y, double z, double detwidth, 
     */
 
 }
+#include <mutex>
+
+std::mutex mtx;
 
 double detector_cuboid::Ldet (Particle &DM){
+    std::lock_guard<std::mutex> lock(mtx);
+    
     b[0]=DM.px;b[1]=DM.py;b[2]=DM.pz;
     //cout << b[0] << " " << b[1] << " " << b[2] << endl; 
     double o[3];
@@ -375,6 +381,7 @@ double detector_cuboid::Ldet (Particle &DM){
    /* if(zero_later){
         return 0.0;
     } */ 
+    
     if(entry>=exit||entry<0)
         return 0.0;
     else{
