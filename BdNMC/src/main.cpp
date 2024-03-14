@@ -36,7 +36,7 @@
 #include "SignalDecay.h"
 
 #include <unistd.h>
-
+#include <cstring>
 
 // ROOT includes
 #include <TFile.h>
@@ -273,7 +273,18 @@ int main(int argc, char *argv[])
   
   char buffer[FILENAME_MAX];
   getcwd(buffer, FILENAME_MAX);
+  
+  strcat(buffer , "/../neutral_meson_flux/pi0s.dat");
   std::cout << "Current path: " << buffer << std::endl;
+  std::ifstream file(buffer);
+  if (file.good()) {
+      std::cout << "File exists.\n";
+  } else {
+      std::cout << "File does not exist.\n";
+  }
+  file.close();
+
+
     
   std::shared_ptr<list<production_channel>> prodlist = par->Get_Production_List();
   int chan_count = prodlist->size();
