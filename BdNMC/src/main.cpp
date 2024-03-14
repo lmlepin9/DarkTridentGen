@@ -35,7 +35,7 @@
 #include "Axion_Dark_Photon.h"
 #include "SignalDecay.h"
 
-#include <filesystem>
+#include <unistd.h>
 
 
 // ROOT includes
@@ -271,8 +271,9 @@ int main(int argc, char *argv[])
   double target_p_cross = par->P_Cross();
   
   
-  std::filesystem::path currentPath = std::filesystem::current_path();
-  std::cout << "Current path: " << currentPath << std::endl;
+  char buffer[FILENAME_MAX];
+  getcwd(buffer, FILENAME_MAX);
+  std::cout << "Current path: " << buffer << std::endl;
     
   std::shared_ptr<list<production_channel>> prodlist = par->Get_Production_List();
   int chan_count = prodlist->size();
