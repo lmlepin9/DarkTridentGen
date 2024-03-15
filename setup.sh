@@ -10,6 +10,7 @@ DTG_TOP_DIR_VAR=echo $DTG_TOP_DIR
 if [ -d "$DTG_TOP_DIR/neutral_meson_flux" ]; then 
     echo "Neutral meson flux files already exist, skipping this part..."
 else 
+    set -e
     echo "Creating flux directory and downloading files..." 
     mkdir -p neutral_meson_flux
     wget https://cernbox.cern.ch/remote.php/dav/public-files/U4uy7tRbj4gYYmo/etas.dat -P $DTG_TOP_DIR/neutral_meson_flux/
