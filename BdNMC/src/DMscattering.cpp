@@ -135,7 +135,7 @@ double F2(double Ee, double EDM, double MDM, double MDP)
 	}
 }
 
-
+/* Commented out by Alex to reduce my paranoia
 // DM - electron scattering total cross section sigma
 double sigma(double EDM, double MDM, double MDP, double kappa, double alphaD)
 {
@@ -148,6 +148,8 @@ double sigma(double EDM, double MDM, double MDP, double kappa, double alphaD)
 	rsig = coef * (F2(EeMaxA, EDM, MDM, MDP) - F2(EeMinA, EDM, MDM, MDP));
 	return (rsig);
 }
+*/
+
 
 double sigma2(double EDM, double MDM, double MDP, double kappa, double alphaD, double Emax, double Emin)
 {

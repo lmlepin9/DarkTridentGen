@@ -14,7 +14,7 @@ double F1 (double,double,double,double);
 double dsigmadEe (double,double,double,double,double,double);
 double dsigmadEe_scaled (double,double,double,double,double,double);
 double F2 (double,double,double,double);
-double sigma (double,double,double,double,double);
+//double sigma (double,double,double,double,double);
 double sigma2 (double,double,double,double,double,double,double);
 //double quickscatter(double EDM, double MDM, double MDP, double kap, double alD);
 //double quickscatter2(double EDM, double MDM, double MDP, double kap, double alD, double Emax, double Emin);
