@@ -110,7 +110,7 @@ double dsigmadEe_scaled(double Ee, double EDM, double MDM, double MDP, double ka
 // Function F2(Ee)
 // Total DM - electron scattering cross section equals
 // sigma =  4*Pi*kappa*kappa*alpha*alphaD*( F2(EeMax)- F2(EeMin) )
-double F2(double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD)
+double F2(double Ee, double EDM, double MDM, double MDP)
 {
 	if (check_dm_type()){
 		// its scalar, use existing BdNMC code
@@ -126,12 +126,12 @@ double F2(double Ee, double EDM, double MDM, double MDP, double kappa, double al
 		// its a fermion, use the new matrix element
 		// (alphaD alphaEM epsilon^2 pi (-2 Ek2 me+(ma^4+8 Ep1^2 me^2+2 ma^2 (2 Ep1 me+me^2+mx^2))/(ma^2+2 (Ek2-me) me)+2 (ma^2+2 Ep1 me+me^2+mx^2) Log[ma^2+2 (Ek2-me) me]))/(2 me^2 (Ep1^2-mx^2))	
 		double denominator {-2.0 * Me*Me * ((EDM*EDM)-(MDM*MDM))};
-		double prefactor {alphaD * alphaEM * kappa * kappa * pi};
+		
 		double t1 {(-2.0 * Ee * Me)};
 		double t2 { ( (MDP*MDP*MDP*MDP)+ (8.*EDM*EDM*Me*Me) + (2.*MDP*MDP*((2.*EDM*Me) + (Me*Me) + (MDM*MDM))) ) / ((MDP*MDP) + (2. * (Ee-Me) * Me))};
 		double t3 {2.* ((MDP*MDP) + (2.*EDM*Me) + (Me*Me) + (MDM*MDM)) * log((MDP*MDP) + (2.*(Ee-Me)*Me))};
 
-		return (prefactor * (t1 + t2 + t3)) / denominator;
+		return (t1 + t2 + t3) / denominator;
 	}
 }
 
@@ -159,6 +159,9 @@ double sigma2(double EDM, double MDM, double MDP, double kappa, double alphaD, d
 		// fermion
 		if (Emax < Emin)
 			return 0;
-		return (F2(Emax, EDM, MDM, MDP, kappa, alphaD) - F2(Emin, EDM, MDM, MDP, kappa, alphaD));
+		
+		double prefactor {alphaD * alphaEM * kappa * kappa * pi};
+
+		return prefactor*(F2(Emax, EDM, MDM, MDP) - F2(Emin, EDM, MDM, MDP));
 	}
 }
