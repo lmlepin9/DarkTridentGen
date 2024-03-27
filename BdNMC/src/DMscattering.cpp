@@ -72,10 +72,10 @@ double fermion_matrix_element(double Ee, double EDM, double MDM, double MDP)
 	return (ratio);
 }
 
-//  differential DM - electron scattering cross section dsigma/dEe
-double dsigmadEe(double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD)
+bool check_dm_type()
 {
 	//read in isScalar.txt and set the isScalar variable
+	// returns true if the DM is scalar, false if it is a fermion
 	bool isScalar;
 	std::string line;
 	std::ifstream isScalarFile;
@@ -85,6 +85,13 @@ double dsigmadEe(double Ee, double EDM, double MDM, double MDP, double kappa, do
 	isScalarFile.close();
 	
 	isScalar = (line == "true");
+	return isScalar;
+}
+
+//  differential DM - electron scattering cross section dsigma/dEe
+double dsigmadEe(double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD)
+{
+	bool isScalar {check_dm_type()};
 	double rdsig;
 	double coef;
 	coef = 4 * Pi * kappa * kappa * alphaEM * alphaD;
@@ -103,16 +110,32 @@ double dsigmadEe_scaled(double Ee, double EDM, double MDM, double MDP, double ka
 // Function F2(Ee)
 // Total DM - electron scattering cross section equals
 // sigma =  4*Pi*kappa*kappa*alpha*alphaD*( F2(EeMax)- F2(EeMin) )
-double F2(double Ee, double EDM, double MDM, double MDP)
+double F2(double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD)
 {
-	double rF2;
-	double F2N1, F2N2, F2D;
-	F2N1 = (4 * EDM * EDM * Me * Me + 2 * EDM * Me * MDP * MDP + MDP * MDP * MDM * MDM) / (2 * Ee * Me - 2 * Me * Me + MDP * MDP);
-	F2N2 = (2 * EDM * Me + MDM * MDM) * log(2 * Ee * Me - 2 * Me * Me + MDP * MDP);
-	F2D = 4 * Me * Me * (EDM * EDM - MDM * MDM);
-	rF2 = -(F2N1 + F2N2) / F2D;
-	return (rF2);
+	if (check_dm_type()){
+		// its scalar, use existing BdNMC code
+		double rF2;
+		double F2N1, F2N2, F2D;
+		F2N1 = (4 * EDM * EDM * Me * Me + 2 * EDM * Me * MDP * MDP + MDP * MDP * MDM * MDM) / (2 * Ee * Me - 2 * Me * Me + MDP * MDP);
+		F2N2 = (2 * EDM * Me + MDM * MDM) * log(2 * Ee * Me - 2 * Me * Me + MDP * MDP);
+		F2D = 4 * Me * Me * (EDM * EDM - MDM * MDM);
+		rF2 = -(F2N1 + F2N2) / F2D;
+		return (rF2);
+	}
+	else {
+		// its a fermion, use the new matrix element
+		// (alphaD alphaEM epsilon^2 pi (-2 Ek2 me+(ma^4+8 Ep1^2 me^2+2 ma^2 (2 Ep1 me+me^2+mx^2))/(ma^2+2 (Ek2-me) me)+2 (ma^2+2 Ep1 me+me^2+mx^2) Log[ma^2+2 (Ek2-me) me]))/(2 me^2 (Ep1^2-mx^2))	
+		double denominator {-2.0 * Me*Me * ((EDM*EDM)-(MDM*MDM))};
+		double prefactor {alphaD * alphaEM * kappa * kappa * pi};
+		double t1 {(-2.0 * Ee * Me)};
+		double t2 { ( (MDP*MDP*MDP*MDP)+ (8.*EDM*EDM*Me*Me) + (2.*MDP*MDP*((2.*EDM*Me) + (Me*Me) + (MDM*MDM))) ) / ((MDP*MDP) + (2. * (Ee-Me) * Me))};
+		double t3 {2.* ((MDP*MDP) + (2.*EDM*Me) + (Me*Me) + (MDM*MDM)) * log((MDP*MDP) + (2.*(Ee-Me)*Me))};
+
+		return (prefactor * (t1 + t2 + t3)) / denominator;
+	}
 }
+
+
 // DM - electron scattering total cross section sigma
 double sigma(double EDM, double MDM, double MDP, double kappa, double alphaD)
 {
@@ -128,7 +151,14 @@ double sigma(double EDM, double MDM, double MDP, double kappa, double alphaD)
 
 double sigma2(double EDM, double MDM, double MDP, double kappa, double alphaD, double Emax, double Emin)
 {
-	if (Emax < Emin)
-		return 0;
-	return (4 * Pi * kappa * kappa * alphaEM * alphaD * (F2(Emax, EDM, MDM, MDP) - F2(Emin, EDM, MDM, MDP)));
+	if (check_dm_type()){
+		if (Emax < Emin)
+			return 0;
+		return (4 * Pi * kappa * kappa * alphaEM * alphaD * (F2(Emax, EDM, MDM, MDP) - F2(Emin, EDM, MDM, MDP)));
+	} else {
+		// fermion
+		if (Emax < Emin)
+			return 0;
+		return (F2(Emax, EDM, MDM, MDP, kappa, alphaD) - F2(Emin, EDM, MDM, MDP, kappa, alphaD));
+	}
 }
