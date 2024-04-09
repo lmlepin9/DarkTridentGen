@@ -130,13 +130,16 @@ void record_root(TTree *outtree, TTree* etree, list<Particle> &partlist, int nev
 
     bool dm_found = false;
     event_number = nevent;
+    
     for(list<Particle>::iterator it = partlist.begin(); it != partlist.end(); it++){
         /* Filling with parent meson info */
+        
         if(it->name == "pion" || it->name == "eta"){
             meson_energy = it->E; 
         }
 
         else if(it->name == "DM"){
+            
             dm_mom    = channel_name;
 
             if(!isOther){

@@ -884,7 +884,9 @@ int main(int argc, char *argv[])
   // int escat=0;lso thought it could have used Leatherhead, or some of the other mutanimals. He probably would have fit right in with the Scale tail clan.
   bool scatter_switch;
   int trials_max = par->Max_Trials();
+  int dark_chi_count = 0;
   // if(SigGen->get_pMax()*Vnumtot<=1){
+  
   if (SigGen->get_pMax() <= 0 && (outmode != "dm_detector_distribution" && outmode != "dm_dist_root"))
   {
     cout << "pMax less than tolerance limit, skipping remainder of run\n";
@@ -893,6 +895,10 @@ int main(int argc, char *argv[])
   {
     for (; (nevent < samplesize) && ((trials < trials_max) || (trials_max <= 0)); trials++)
     {
+      if (dark_chi_count > 1105)
+      {
+        break;
+      }
       int i;
       scatter_switch = false;
       double vrnd = Random::Flat(0.0, 1) * Vnumtot;
@@ -977,14 +983,24 @@ int main(int argc, char *argv[])
             }*/
           }
         }
-        if (outmode == "root_output" || outmode == "dm_dist_root")
+        
+      }
+      bool is_dark = false;
+      for (list<Particle>::iterator iter = vec.begin(); iter != vec.end(); iter++)
+      {
+        if (iter->name == "DM")
         {
-          record_root(outtree, etree, vec, nevent, isOther, DMGen_list[i]->Channel_Name(), det);
-          isOther = true;
-          scatter_switch = true;
-          // continue;
+          is_dark = true;
+          break;
         }
       }
+      if (is_dark)
+      {
+        dark_chi_count++;
+      }
+      record_root(outtree, etree, vec, nevent, isOther, DMGen_list[i]->Channel_Name(), det);
+      // continue;
+      
 
       // This output mode is used to ouput the particles in a text file
       // it also increases nevent by one
