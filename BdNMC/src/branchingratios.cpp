@@ -236,7 +236,7 @@ double dbrpi0_to_gamma_dm_dm(double mv, double mx, double kappa, double alphaD, 
 
     }
 
-    return dbr;
+    return dbr; // THIS IS A DIFFERNTIAL BRANCHING RATIO ?? SEE 
 }
 
 double brpi0_to_gamma_dm_dm(double mv, double mx, double kappa, double alphaD, std::string dm_type){
