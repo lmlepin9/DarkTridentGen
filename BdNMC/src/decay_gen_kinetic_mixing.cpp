@@ -118,15 +118,15 @@ bool pion_decay_gen::GenDM(std::list<Particle>& vec, std::function<double(Partic
     vec.push_back(meson);
  	intersect1=det_int(darkmatter1);
     intersect2=det_int(darkmatter2);
-
+    vec.push_back(darkphoton);
+        
+    vec.push_back(darkmatter1);
+        
+        
+    vec.push_back(darkmatter2);
     if((intersect1)>0 || (intersect2)>0){
-        vec.push_back(darkphoton);
-        if(intersect1>0){
-            vec.push_back(darkmatter1);
-        }
-        if(intersect2>0){
-            vec.push_back(darkmatter2);
-        }
+    
+        
         return true;
     }  
     else
@@ -224,14 +224,15 @@ bool eta_decay_gen::GenDM(std::list<Particle>& vec, std::function<double(Particl
 */
 
     vec.push_back(meson);
+    vec.push_back(darkphoton);
+        
+    vec.push_back(darkmatter1);
+        
+        
+    vec.push_back(darkmatter2);
+        
     if((intersect1)>0 || (intersect2)>0){
-		vec.push_back(darkphoton);
-        if(intersect1>0){
-            vec.push_back(darkmatter1);
-        }
-        if(intersect2>0){
-            vec.push_back(darkmatter2);
-        }
+		
         return true;
     }	
     else
