@@ -130,19 +130,7 @@ void record_root(TTree *outtree, TTree* etree, list<Particle> &partlist, int nev
 
     bool dm_found = false;
     event_number = nevent;
-    int test = 0;
-    for(list<Particle>::iterator it = partlist.begin(); it != partlist.end(); it++){
-        test++;
-
-    }
-        
-    if (test > 1){
-    for(list<Particle>::iterator it = partlist.begin(); it != partlist.end(); it++){
-        cout<<"Particle name: "<<it->name<<endl;
-
-    }
-    cout<<"----------------------"<<endl;
-    }
+    
     for(list<Particle>::iterator it = partlist.begin(); it != partlist.end(); it++){
         /* Filling with parent meson info */
         

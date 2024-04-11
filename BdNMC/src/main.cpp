@@ -895,7 +895,7 @@ int main(int argc, char *argv[])
   {
     for (; (nevent < samplesize) && ((trials < trials_max) || (trials_max <= 0)); trials++)
     {
-      if (dark_chi_count > 1105)
+      if (dark_chi_count > 50000)
       {
         break;
       }
