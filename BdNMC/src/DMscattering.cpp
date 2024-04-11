@@ -84,7 +84,7 @@ bool check_dm_type()
 	isScalarFile >> line;
 	isScalarFile.close();
 	
-	isScalar = (line == "true");
+	isScalar = (line == "1");
 	return isScalar;
 }
 
