@@ -818,11 +818,11 @@ int main(int argc, char *argv[])
   }
 
   // For DarkTridentGen we only want the DM flux
-  if (outmode == "dm_detector_distribution" || outmode == "dm_dist_root")
-  {
-    BURN_MAX = 0;
-    cout << "Detector_Mode selected.\nSkipping Burn-In.\n";
-  }
+  // if (outmode == "dm_detector_distribution" || outmode == "dm_dist_root")
+  // {
+  //   BURN_MAX = 0;
+  //   cout << "Detector_Mode selected.\nSkipping Burn-In.\n";
+  // }
 
   // This works if we also want to simulate the scattering part
   double BURN_OVERRIDE = par->Burn_Timeout();
