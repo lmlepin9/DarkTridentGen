@@ -12,8 +12,8 @@ double EeTMax (double,double);
 double EeTMin (double,double);
 double F1 (double,double,double,double);
 double dsigmadEe (double,double,double,double,double,double);
-double dsigmadEe_scaled (double,double,double,double,double,double);
-double F2 (double,double,double,double);
+//double dsigmadEe_scaled (double,double,double,double,double,double); // commented out by Alex
+double F2 (double,double,double,double,bool);
 //double sigma (double,double,double,double,double);
 double sigma2 (double,double,double,double,double,double,double);
 //double quickscatter(double EDM, double MDM, double MDP, double kap, double alD);

@@ -63,7 +63,6 @@ double F1(double Ee, double EDM, double MDM, double MDP)
 
 double fermion_matrix_element(double Ee, double EDM, double MDM, double MDP)
 {
-	
 	double ratio;
 	double Nominator, Denominator;
 	Nominator = (EDM * EDM * Me + EDM * (EDM * Me + 2 * Me * (-Ee + Me)) + (Ee - Me) * ((Ee - 2 * Me) * Me - MDP * MDP));
@@ -95,25 +94,31 @@ double dsigmadEe(double Ee, double EDM, double MDM, double MDP, double kappa, do
 	double rdsig;
 	double coef;
 	coef = 4 * Pi * kappa * kappa * alphaEM * alphaD;
-	if (isScalar)
+	if (isScalar) {
 		rdsig = coef * F1(Ee, EDM, MDM, MDP);
-	else
+		//std::cout << "Scalar dsigmade" << std::endl;
+	}
+	else {
 		rdsig = coef * fermion_matrix_element(Ee, EDM, MDM, MDP);
+		//std::cout << "Fermion dsigmade" << std::endl;
+	}
 	return (rdsig);
 }
 
+/* I think this is unused, so remove it for my sanity - Alex
 double dsigmadEe_scaled(double Ee, double EDM, double MDM, double MDP, double kappa, double alphaD)
 {
 	return dsigmadEe(Ee, EDM, MDM, MDP, kappa, alphaD) * convGeV2cm2 * convmcm;
-}
+}*/
 
 // Function F2(Ee)
 // Total DM - electron scattering cross section equals
 // sigma =  4*Pi*kappa*kappa*alpha*alphaD*( F2(EeMax)- F2(EeMin) )
-double F2(double Ee, double EDM, double MDM, double MDP)
+double F2(double Ee, double EDM, double MDM, double MDP, bool isScalar)
 {
-	if (check_dm_type()){
+	if (isScalar){
 		// its scalar, use existing BdNMC code
+		//std::cout<<"Scalar F2"<<std::endl;
 		double rF2;
 		double F2N1, F2N2, F2D;
 		F2N1 = (4 * EDM * EDM * Me * Me + 2 * EDM * Me * MDP * MDP + MDP * MDP * MDM * MDM) / (2 * Ee * Me - 2 * Me * Me + MDP * MDP);
@@ -124,6 +129,7 @@ double F2(double Ee, double EDM, double MDM, double MDP)
 	}
 	else {
 		// its a fermion, use the new matrix element
+		//std::cout<<"Fermion F2"<<std::endl;
 		// (alphaD alphaEM epsilon^2 pi (-2 Ek2 me+(ma^4+8 Ep1^2 me^2+2 ma^2 (2 Ep1 me+me^2+mx^2))/(ma^2+2 (Ek2-me) me)+2 (ma^2+2 Ep1 me+me^2+mx^2) Log[ma^2+2 (Ek2-me) me]))/(2 me^2 (Ep1^2-mx^2))	
 		double denominator {-2.0 * Me*Me * ((EDM*EDM)-(MDM*MDM))};
 		
@@ -153,10 +159,11 @@ double sigma(double EDM, double MDM, double MDP, double kappa, double alphaD)
 
 double sigma2(double EDM, double MDM, double MDP, double kappa, double alphaD, double Emax, double Emin)
 {
-	if (check_dm_type()){
+	bool isScalar = check_dm_type();
+	if (isScalar){
 		if (Emax < Emin)
 			return 0;
-		return (4 * Pi * kappa * kappa * alphaEM * alphaD * (F2(Emax, EDM, MDM, MDP) - F2(Emin, EDM, MDM, MDP)));
+		return (4 * Pi * kappa * kappa * alphaEM * alphaD * (F2(Emax, EDM, MDM, MDP, isScalar) - F2(Emin, EDM, MDM, MDP, isScalar)));
 	} else {
 		// fermion
 		if (Emax < Emin)
@@ -164,6 +171,6 @@ double sigma2(double EDM, double MDM, double MDP, double kappa, double alphaD, d
 		
 		double prefactor {alphaD * alphaEM * kappa * kappa * pi};
 
-		return prefactor*(F2(Emax, EDM, MDM, MDP) - F2(Emin, EDM, MDM, MDP));
+		return prefactor*(F2(Emax, EDM, MDM, MDP, isScalar) - F2(Emin, EDM, MDM, MDP, isScalar));
 	}
 }
