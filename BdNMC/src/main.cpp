@@ -1032,10 +1032,10 @@ int main(int argc, char *argv[])
     if (scat_list[i] == 0)
       signal_list[i] = 0;
     else
-      signal_list[i] = (double)scat_list[i] / (double)trials * Vnumtot * SigGen->get_pMax() / repeat * par->Efficiency() * timing_efficiency[i] / scat_list[i];
+      signal_list[i] = (double)scat_list[i] / (double)trials * Vnumtot * SigGen->get_pMax() / repeat * par->Efficiency() * timing_efficiency[i];
     scattot += scat_list[i];
-    cout << DMGen_list[i]->Channel_Name() << ": " << (double)scat_list[i] / (double)trials_list[i] * Vnum_list[i] * SigGen->get_pMax() / repeat * par->Efficiency() * timing_efficiency[i] / scat_list[i];
-    cout << " Timing_Efficiency: " << timing_efficiency[i] / scat_list[i] << " ";
+    cout << DMGen_list[i]->Channel_Name() << ": " << (double)scat_list[i] / (double)trials_list[i] * Vnum_list[i] * SigGen->get_pMax() / repeat * par->Efficiency() * timing_efficiency[i];
+    cout << " Timing_Efficiency: " << timing_efficiency[i] << " ";
     cout << "Events: " << scat_list[i] << " Trials: " << trials_list[i] << " V_num: " << Vnum_list[i] << " pMax: " << SigGen->get_pMax() << " repeat: " << repeat << " efficiency: " << par->Efficiency() << endl;
     DMGen_list[i]->set_ntrials(trials_list[i]);
     if (outmode == "summary" || outmode == "dm_detector_distribution" ||
