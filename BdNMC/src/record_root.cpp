@@ -17,7 +17,7 @@ int dm_id_other;
 
 //POT variables
 std::string channel_name, dm_mom;
-double branching_ratio, ntrials, tot_pot;
+double branching_ratio, ntrials, tot_pot, signal, pmax;
 
 //Model variables
 double alphaD, dm_mass, dp_mass, epsilon;
@@ -108,6 +108,8 @@ TTree* make_pot_tree(){
     pot_tree->Branch("branching_ratio", &branching_ratio);
     pot_tree->Branch("ntrials", &ntrials);
     pot_tree->Branch("tot_pot", &tot_pot);
+    pot_tree->Branch("signal", &signal);
+    pot_tree->Branch("pmax", &pmax);
 
     return pot_tree;
 }
@@ -220,7 +222,7 @@ void record_root(TTree *outtree, TTree* etree, list<Particle> &partlist, int nev
     
 }
 
-void record_pot(TTree *pot_tree, std::vector<std::shared_ptr<DMGenerator> > DMGen_list, std::vector<double> n_mesons){
+void record_pot(TTree *pot_tree, std::vector<std::shared_ptr<DMGenerator> > DMGen_list, std::vector<double> n_mesons, std::vector<double> signal_list, double PMax){
 
 
 
@@ -230,6 +232,9 @@ void record_pot(TTree *pot_tree, std::vector<std::shared_ptr<DMGenerator> > DMGe
 
         branching_ratio = DMGen_list[i]->BranchingRatio();
         ntrials         = DMGen_list[i]->NTrials();
+
+        signal = signal_list[i];
+        pmax = PMax;
 
         double file_evts(-1);
         if(channel_name == "pi0_decay"){

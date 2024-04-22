@@ -12,7 +12,7 @@
 
 void record_root(TTree *outtree, TTree *etree, std::list<Particle> &, int nevent, bool isOther, std::string channel_name, std::shared_ptr<detector> det);
 void record_model(TTree *model_tree, double alD, double kappa, double mdm, double mv);
-void record_pot(TTree *pot_tree, std::vector<std::shared_ptr<DMGenerator> > DMGen_list, std::vector<double> n_mesons);
+void record_pot(TTree *pot_tree, std::vector<std::shared_ptr<DMGenerator> > DMGen_list, std::vector<double> n_mesons, std::vector<double> signal_list, double PMax);
 
 TTree* make_event_tree();
 TTree* make_pot_tree();

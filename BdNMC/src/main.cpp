@@ -1067,7 +1067,7 @@ int main(int argc, char *argv[])
   else if (outmode == "root_output" || outmode == "dm_dist_root")
   {
 
-    record_pot(pot_tree, DMGen_list, number_of_mesons);
+    record_pot(pot_tree, DMGen_list, number_of_mesons, signal_list, SigGen->get_pMax());
   }
 
   summary_out->close();
