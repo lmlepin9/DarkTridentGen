@@ -246,7 +246,7 @@ void record_pot(TTree *pot_tree, std::vector<std::shared_ptr<DMGenerator> > DMGe
             file_evts = n_mesons[i];
         }
 
-        tot_pot = (g4numi_pot * ntrials / file_evts) / branching_ratio;
+        tot_pot = (g4numi_pot * ntrials / file_evts) / branching_ratio; // / max(w_int??)
 
         pot_tree->Fill();
 
