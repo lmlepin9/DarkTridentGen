@@ -203,6 +203,7 @@ int main(int argc, char *argv[])
   TTree *pot_tree = make_pot_tree();
   TTree *model_tree = make_model_tree();
   TTree *etree = make_etree();
+  TTree *mesontree = make_mesontree();
 
   TFile *outfile = 0;
 
@@ -998,7 +999,7 @@ int main(int argc, char *argv[])
       {
         dark_chi_count++;
       }
-      record_root(outtree, etree, vec, nevent, isOther, DMGen_list[i]->Channel_Name(), det);
+      record_root(outtree, etree, mesontree, vec, nevent, isOther, DMGen_list[i]->Channel_Name(), det);
       // continue;
       
 
@@ -1099,6 +1100,7 @@ int main(int argc, char *argv[])
     model_tree->Write();
     outtree->Write();
     etree->Write();
+    mesontree->Write();
     outfile->Close();
   }
 

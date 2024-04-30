@@ -26,6 +26,8 @@ double alphaD, dm_mass, dp_mass, epsilon;
 // double electron variables
 int electron_id;
 double electron_energy, electron_px, electron_py, electron_pz, electron_origin_x, electron_origin_y, electron_origin_z, electron_origin_t0, electron_vx, electron_vy, electron_vz;
+int meson_id;
+double meson_px, meson_py, meson_pz, meson_origin_x, meson_origin_y, meson_origin_z, meson_origin_t0;
 
 TTree* make_event_tree(){
 
@@ -124,9 +126,23 @@ TTree* make_model_tree(){
 
     return model_tree;
 }
+TTree* make_mesontree(){
+    TTree* mesontree = new TTree("meson_tree", "Tree containing mesons");
+    mesontree->Branch("meson_id", &meson_id);
+    mesontree->Branch("meson_energy", &meson_energy);
+    mesontree->Branch("meson_px", &meson_px);
+    mesontree->Branch("meson_py", &meson_py);
+    mesontree->Branch("meson_pz", &meson_pz);
+    mesontree->Branch("meson_origin_x", &meson_origin_x);
+    mesontree->Branch("meson_origin_y", &meson_origin_y);
+    mesontree->Branch("meson_origin_z", &meson_origin_z);
+    mesontree->Branch("meson_origin_t0", &meson_origin_t0);
+
+    return mesontree;
+}
 
 
-void record_root(TTree *outtree, TTree* etree, list<Particle> &partlist, int nevent, bool isOther, std::string channel_name, std::shared_ptr<detector> det){
+void record_root(TTree *outtree, TTree *etree,TTree *mesontree, list<Particle> &partlist, int nevent, bool isOther, std::string channel_name, std::shared_ptr<detector> det){
 
     bool dm_found = false;
     event_number = nevent;
@@ -136,6 +152,16 @@ void record_root(TTree *outtree, TTree* etree, list<Particle> &partlist, int nev
         
         if(it->name == "pion" || it->name == "eta"){
             meson_energy = it->E; 
+            meson_id = it->origin_id;
+            
+            meson_px = it->px;
+            meson_py = it->py;
+            meson_pz = it->pz;
+            meson_origin_x = it->origin_coords[0];
+            meson_origin_y = it->origin_coords[1];
+            meson_origin_z = it->origin_coords[2];
+            meson_origin_t0 = it->origin_coords[3];
+            mesontree->Fill();
         }
 
         else if(it->name == "DM"){
