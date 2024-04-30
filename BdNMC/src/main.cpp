@@ -811,7 +811,8 @@ int main(int argc, char *argv[])
   // START OF BURN-IN//
   ////////////////////
 
-  double BURN_MAX = par->Burn_In();
+  //double BURN_MAX = par->Burn_In();
+  double BURN_MAX = 0; // dont need it for decay test
   if (BURN_MAX < 0)
   {
     cout << "burn_max < 0 specified. Assuming default value burn_max=2000\n";
