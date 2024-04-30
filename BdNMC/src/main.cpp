@@ -204,6 +204,7 @@ int main(int argc, char *argv[])
   TTree *model_tree = make_model_tree();
   TTree *etree = make_etree();
   TTree *mesontree = make_mesontree();
+  TTree *photontree = make_photon_tree();
 
   TFile *outfile = 0;
 
@@ -1000,7 +1001,7 @@ int main(int argc, char *argv[])
       {
         dark_chi_count++;
       }
-      record_root(outtree, etree, mesontree, vec, nevent, isOther, DMGen_list[i]->Channel_Name(), det);
+      record_root(outtree, etree, mesontree, photontree, vec, nevent, isOther, DMGen_list[i]->Channel_Name(), det);
       // continue;
       
 
@@ -1102,6 +1103,7 @@ int main(int argc, char *argv[])
     outtree->Write();
     etree->Write();
     mesontree->Write();
+    photontree->Write();
     outfile->Close();
   }
 

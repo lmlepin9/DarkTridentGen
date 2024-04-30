@@ -28,6 +28,8 @@ int electron_id;
 double electron_energy, electron_px, electron_py, electron_pz, electron_origin_x, electron_origin_y, electron_origin_z, electron_origin_t0, electron_vx, electron_vy, electron_vz;
 int meson_id;
 double meson_px, meson_py, meson_pz, meson_origin_x, meson_origin_y, meson_origin_z, meson_origin_t0;
+int photon_id;
+double photon_energy,photon_px, photon_py, photon_pz, photon_origin_x, photon_origin_y, photon_origin_z, photon_origin_t0;
 
 TTree* make_event_tree(){
 
@@ -140,9 +142,23 @@ TTree* make_mesontree(){
 
     return mesontree;
 }
+TTree* make_photon_tree(){
+    TTree* photontree = new TTree("dark_photon_tree", "Tree containing V particles");
+    photontree->Branch("photon_id", &photon_id);
+    photontree->Branch("photon_energy", &photon_energy);
+    photontree->Branch("photon_px", &photon_px);
+    photontree->Branch("photon_py", &photon_py);
+    photontree->Branch("photon_pz", &photon_pz);
+    photontree->Branch("photon_origin_x", &photon_origin_x);
+    photontree->Branch("photon_origin_y", &photon_origin_y);
+    photontree->Branch("photon_origin_z", &photon_origin_z);
+    photontree->Branch("photon_origin_t0", &photon_origin_t0);
+
+    return photontree;
+}
 
 
-void record_root(TTree *outtree, TTree *etree,TTree *mesontree, list<Particle> &partlist, int nevent, bool isOther, std::string channel_name, std::shared_ptr<detector> det){
+void record_root(TTree *outtree, TTree *etree,TTree *mesontree,TTree *photontree, list<Particle> &partlist, int nevent, bool isOther, std::string channel_name, std::shared_ptr<detector> det){
 
     bool dm_found = false;
     event_number = nevent;
@@ -162,6 +178,19 @@ void record_root(TTree *outtree, TTree *etree,TTree *mesontree, list<Particle> &
             meson_origin_z = it->origin_coords[2];
             meson_origin_t0 = it->origin_coords[3];
             mesontree->Fill();
+        }
+        if(it->name == "V"){
+            photon_energy = it->E; 
+            photon_id = it->origin_id;
+            
+            photon_px = it->px;
+            photon_py = it->py;
+            photon_pz = it->pz;
+            photon_origin_x = it->origin_coords[0];
+            photon_origin_y = it->origin_coords[1];
+            photon_origin_z = it->origin_coords[2];
+            photon_origin_t0 = it->origin_coords[3];
+            photontree->Fill();
         }
 
         else if(it->name == "DM"){
