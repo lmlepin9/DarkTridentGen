@@ -11,10 +11,10 @@ run 1000
 
 #Model Parameters
 epsilon 1e-3
-dark_matter_mass 0.03
-dark_photon_mass 0.05
+dark_matter_mass 0.02
+dark_photon_mass 0.0333333333
 alpha_D 0.1
-decay_type fermion
+decay_type scalar
 
 #Run parameters
 POT 1e21
@@ -34,7 +34,7 @@ beam_energy 120
 ################################
 
 #Production Parameters
-production_channel pi0_decay
+production_channel eta_decay
 production_distribution particle_list
 particle_list_file ../neutral_meson_flux/pi0s.dat
 particle_list_position true
