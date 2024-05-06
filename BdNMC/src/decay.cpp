@@ -121,12 +121,21 @@ void TwoBodyDecay(Particle &parent, Particle &daughter1, Particle &daughter2, do
 it probably won't change very much if the angle is handled differently.
 */
 void DecayDM_Off_Shell(Particle &daughter1, Particle &daughter2, Particle &mediator, Particle &parent, double theta){
-    double p =TriangleFunc(parent.m,mediator.m,0);
+    TwoBodyDecay(mediator, daughter1, daughter2, theta);
+    mediator.ThreeMomentum(0,0,TriangleFunc(parent.m,mediator.m,0));
+    daughter1.Lorentz(mediator);
+    daughter2.Lorentz(mediator);
     double mtheta=acos(Random::Flat(-1,1));
     double mphi = Random::Flat(0,1)*2*pi;
-    mediator.ThreeMomentum(p*sin(mtheta)*cos(mphi),p*sin(mtheta)*sin(mphi),p*cos(mtheta));
+    mediator.Rotate_z(mtheta);
+    mediator.Rotate_y(mphi);
+    daughter1.Rotate_z(mtheta);
+    daughter1.Rotate_y(mphi);
+    daughter2.Rotate_z(mtheta);
+    daughter2.Rotate_y(mphi);
     mediator.Lorentz(parent);
-	TwoBodyDecay(mediator, daughter1, daughter2, theta);
+    daughter1.Lorentz(parent);
+    daughter2.Lorentz(parent);
 	Link_Particles(parent,mediator);
 	Link_Particles_Immediate(mediator,daughter1);
 	Link_Particles_Immediate(mediator,daughter2);
