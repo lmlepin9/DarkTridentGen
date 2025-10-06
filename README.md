@@ -36,6 +36,9 @@ and to the output directory have to be declared before running BdNMC.
 
 `./BdNMC/bin/BdNMC parameter_fermion_test_pi0.dat`
 
+## Uboonecode interface
+
+For instructions on how to interface the DarkTridentGen output with LArSoft and uboonecode check out the UBCodeFCLs directory. 
 
 
 
