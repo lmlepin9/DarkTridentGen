@@ -1,0 +1,100 @@
+#include "time_memory_tracker_microboone.fcl"
+#include "services_microboone.fcl"
+#include "genie_microboone_default+MEC.fcl"
+#include "mcreco.fcl"
+
+#include "microboone_siminfomixer.fcl"
+#include "local_gen_include.fcl"
+//========================================
+
+services:
+{
+  scheduler:    { defaultExceptions: false }    # Make all uncaught exceptions fatal.
+  # Load the service that manages root files for histograms.
+  TFileService: { fileName: "gen_hist.root" }
+  TimeTracker:             @local::microboone_time_tracker
+  MemoryTracker:           @local::microboone_memory_tracker
+  RandomNumberGenerator: {} #ART native random number generator
+  FileCatalogMetadata:  @local::art_file_catalog_mc
+  @table::microboone_g4_services
+}
+
+process_name : SimInfoMixer      #The process name must NOT contain any underscores
+
+source:
+{
+  module_type: RootInput
+  saveMemoryObjectThreshold: 0
+  maxEvents: -1
+}
+
+outputs: {
+  out: { module_type: RootOutput
+  	 fileName: "%ifb_%tc_simmxd.root"
+	 compressionLevel: 1 
+	 dataTier: "generated"
+         SelectEvents: ["mixer_path"]
+       }
+}
+
+physics: {
+
+  producers : {
+    mcreco:    @local::standard_mcreco
+  }
+
+  analyzers: {
+  }
+
+  filters : {
+    generator: @local::microboone_siminfomixer
+    largeant: @local::microboone_siminfomixer
+    ionization: @local::microboone_siminfomixer
+  }
+
+  mixer_path : [ generator, largeant, ionization, mcreco ]
+  trigger_paths : [ mixer_path ]
+
+  output : [ out ]
+  end_paths: [ output ]
+
+}
+
+physics.filters.generator.SimInputFileNames : [ "genfile.root.local" ]
+physics.filters.generator.MCTruthInputModuleLabels: ["generator::DarkTridentGen"]
+physics.filters.generator.MCFluxInputModuleLabels: ["generator::DarkTridentGen"]
+physics.filters.generator.GTruthInputModuleLabels: ["generator::DarkTridentGen"]
+physics.filters.generator.BeamGateInputModuleLabels: ["generator::DarkTridentGen"]
+physics.filters.generator.MCTruthMCFluxAssnsInputModuleLabels: ["generator::DarkTridentGen"]
+physics.filters.generator.MCTruthGTruthAssnsInputModuleLabels: ["generator::DarkTridentGen"]
+physics.filters.generator.POTSummaryTag: "potinevent:SubRunPOT"
+
+physics.filters.largeant.SimInputFileNames : [ "genfile.root.local" ]
+physics.filters.largeant.MCTruthInputModuleLabels: []
+physics.filters.largeant.MCFluxInputModuleLabels: []
+physics.filters.largeant.GTruthInputModuleLabels: []
+physics.filters.largeant.BeamGateInputModuleLabels: []
+physics.filters.largeant.MCTruthMCFluxAssnsInputModuleLabels: []
+physics.filters.largeant.MCTruthGTruthAssnsInputModuleLabels: []
+physics.filters.largeant.MCParticleInputModuleLabels: ["largeant::DarkTridentGen"]
+physics.filters.largeant.SimEnergyDepositInputModuleLabels: ["largeant:TPCActive:DarkTridentGen","largeant:Other:DarkTridentGen"]
+physics.filters.largeant.AuxDetSimChannelInputModuleLabels: ["largeant::DarkTridentGen"]
+physics.filters.largeant.SimChannelInputModuleLabels: ["largeant::DarkTridentGen"]
+physics.filters.largeant.SimPhotonsInputModuleLabels: ["largeant::DarkTridentGen"]
+physics.filters.largeant.MCTruthMCParticleAssnsInputModuleLabels: ["largeant::DarkTridentGen"]
+physics.filters.largeant.FillPOTInfo: false
+
+physics.filters.ionization.SimInputFileNames : [ "genfile.root.local" ]
+physics.filters.ionization.MCTruthInputModuleLabels: []
+physics.filters.ionization.MCFluxInputModuleLabels: []
+physics.filters.ionization.GTruthInputModuleLabels: []
+physics.filters.ionization.BeamGateInputModuleLabels: []
+physics.filters.ionization.MCTruthMCFluxAssnsInputModuleLabels: []
+physics.filters.ionization.MCTruthGTruthAssnsInputModuleLabels: []
+physics.filters.ionization.SimEnergyDepositInputModuleLabels: ["ionization::DarkTridentGen"]
+physics.filters.ionization.FillPOTInfo: false
+
+physics.producers.mcreco.MCParticleLabel: "largeant"
+physics.producers.mcreco.SimChannelLabel: "ionization" # "driftWC:simpleSC"
+physics.producers.mcreco.UseSimEnergyDeposit: true
+physics.producers.mcreco.MCRecoPart.SavePathPDGList: [11,-11,13,-13,211,-211,111,311,310,130,321,-321,2212,2112,2224,2214,2114,1114,3122,1000010020,1000010030,1000020030,1000020040]
